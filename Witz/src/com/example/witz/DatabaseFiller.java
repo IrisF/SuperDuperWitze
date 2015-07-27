@@ -22,20 +22,24 @@ public class DatabaseFiller {
         this.db  = db;
     }
 
-    public void fillDatabase(AssetManager assets) throws IOException {
-        String jokes = readFile("../assets/witze/witze.txt", assets);
+    public void fillDatabase(String jokeString,AssetManager assets) throws IOException {
+        String jokes = jokeString;//readFile("witze.txt", assets);
+        System.out.println("fillDatabase, jokes: " + jokes);
         String [] jokesAsList = jokes.split(";");
         insertJokesIntoDatabase(jokesAsList);
     }
 
     private void insertJokesIntoDatabase(String[] jokesAsList) {
         for(String joke:jokesAsList){
+            System.out.println("insertJokesIntoDatabase, joke: " + joke);
             String[] separatedJokeAndCategories = joke.split(":");
             String actualJoke = separatedJokeAndCategories[0];
             String categories = "";
-            if(separatedJokeAndCategories[1] != null){
+            if(separatedJokeAndCategories.length>1){
                 categories = separatedJokeAndCategories[1];
             }
+            System.out.println("insertJokesIntoDatabase, actualJoke: " + actualJoke);
+            System.out.println("insertJokesIntoDatabase, categories: " + categories);
             saveJoke(actualJoke, categories);
         }
     }
@@ -49,7 +53,7 @@ public class DatabaseFiller {
 
 
     private String readFile(String fileName, AssetManager assets) throws IOException {
-        /**BufferedReader br = new BufferedReader(new FileReader(fileName));
+        /*BufferedReader br = new BufferedReader(new FileReader(fileName));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -62,11 +66,10 @@ public class DatabaseFiller {
             return sb.toString();
         } finally {
             br.close();
-        }
-         */
+        }*/
         BufferedReader reader;
         String jokes = "";
-       /** try{
+        try{
             final InputStream file = assets.open(fileName);
             reader = new BufferedReader(new InputStreamReader(file));
             String line = reader.readLine();
@@ -77,7 +80,7 @@ public class DatabaseFiller {
             }
         } catch(IOException ioe){
             ioe.printStackTrace();
-        }*/
+        }
         return jokes;
     }
 }

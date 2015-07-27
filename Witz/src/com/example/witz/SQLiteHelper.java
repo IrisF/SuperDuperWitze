@@ -24,9 +24,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     private static final String id = "id";
 
-    private static final String JOKE = "title";
+    private static final String JOKE = "joke";
 
-    private static final String CATEGORIES = "author";
+    private static final String CATEGORIES = "categories";
 
 
 
@@ -80,6 +80,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         joke.setJoke(cursor.getString(1));
         joke.setCategories(cursor.getString(2));
         return joke;
+    }
+
+    public void deleteAllJokes(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(table_JOKE, id + " > ?", new String[] { String.valueOf(0) });
+
+        db.close();
     }
 
     public List getAllJokes() {

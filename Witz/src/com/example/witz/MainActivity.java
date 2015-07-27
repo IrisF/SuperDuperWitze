@@ -17,9 +17,9 @@ import java.util.Random;
 
 public class MainActivity extends Activity {
 
-	/*private final Button nextJokeButton = (Button) findViewById(R.id.nextJoke);
-	private final Button addJokeButton = (Button) findViewById(R.id.add);
-	private final TextView jokeView = (TextView) findViewById(R.id.jokeView);*/
+	private Button nextJokeButton = null;
+	private Button addJokeButton = null;
+	private TextView jokeView = null;
 	SQLiteHelper db = new SQLiteHelper(this);
 	private final DatabaseFiller dbFiller = new DatabaseFiller(db);
 	private List listJokes = new ArrayList();
@@ -31,27 +31,33 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		nextJokeButton = (Button) findViewById(R.id.nextJoke);
+		addJokeButton = (Button) findViewById(R.id.add);
+		jokeView = (TextView) findViewById(R.id.jokeView);
+		db.deleteAllJokes();
 		fillDatabase();
-		//retrieveJokesFromDatabase();
-		//showNewJoke();
-		//nextJokeButton.setOnClickListener(new View.OnClickListener() {
-		/*	public void onClick(View v) {
+		retrieveJokesFromDatabase();
+		showNewJoke();
+		nextJokeButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
 				showNewJoke();
 			}
-		});*/
+		});
 
 	}
 
 	private void fillDatabase(){
 		try {
-			dbFiller.fillDatabase(getAssets());
+			String s= getApplicationContext().getString(R.string.witze);
+			System.out.println(s);
+			dbFiller.fillDatabase(s, getAssets());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void retrieveJokesFromDatabase(){
-		//listJokes = db.getAllJokes();
+		listJokes = db.getAllJokes();
 	}
 
 
@@ -62,17 +68,17 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-/*	private void showNewJoke() {
+	private void showNewJoke() {
 		String oldJoke = jokeView.getText().toString();
-		maxForRandom = listJokes.size();
+		maxForRandom = listJokes.size()-1;
 		int position = random.nextInt((maxForRandom - minForRandom) + 1) + minForRandom;
-		String newJoke = listJokes.get(position).toString();
-		if(!oldJoke.equals(newJoke)){
-			jokeView.setText(newJoke);
+		Joke newJoke = (Joke) listJokes.get(position);
+		if(!oldJoke.equals(newJoke.getJoke())){
+			jokeView.setText(newJoke.getJoke());
 		}else{
 			showNewJoke();
 		}
-	}*/
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
