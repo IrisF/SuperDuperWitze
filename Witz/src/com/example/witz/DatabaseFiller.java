@@ -49,6 +49,7 @@ public class DatabaseFiller {
         funnyJoke.setJoke(actualJoke);
         funnyJoke.setCategories(categories);
         db.createJoke(funnyJoke);
+        //nein
     }
 
 
