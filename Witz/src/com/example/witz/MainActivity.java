@@ -2,6 +2,7 @@ package com.example.witz;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
@@ -34,16 +35,32 @@ public class MainActivity extends Activity {
 		nextJokeButton = (Button) findViewById(R.id.nextJoke);
 		addJokeButton = (Button) findViewById(R.id.add);
 		jokeView = (TextView) findViewById(R.id.jokeView);
-		db.deleteAllJokes();
-		fillDatabase();
-		retrieveJokesFromDatabase();
+		refillDatabase();
 		showNewJoke();
 		nextJokeButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				showNewJoke();
 			}
 		});
+		addJokeButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				addNewJoke();
+			}
+		});
 
+	}
+
+	private void refillDatabase(){
+		db.deleteAllJokes();
+		fillDatabase();
+		retrieveJokesFromDatabase();
+	}
+
+	private void addNewJoke() {
+		Intent i = new Intent(getApplicationContext(), AddActivity.class);
+		i.putExtra("db", db);
+		startActivity(i);
+		refillDatabase();
 	}
 
 	private void fillDatabase(){
@@ -69,6 +86,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void showNewJoke() {
+		checkForNewJokes();
 		String oldJoke = jokeView.getText().toString();
 		maxForRandom = listJokes.size()-1;
 		int position = random.nextInt((maxForRandom - minForRandom) + 1) + minForRandom;
@@ -77,6 +95,12 @@ public class MainActivity extends Activity {
 			jokeView.setText(newJoke.getJoke());
 		}else{
 			showNewJoke();
+		}
+	}
+
+	private void checkForNewJokes(){
+		if(listJokes.size()!= db.getAllJokes().size()){
+			retrieveJokesFromDatabase();
 		}
 	}
 
